@@ -4,6 +4,7 @@ from langchain.llms import GooglePalm
 from langchain.document_loaders import CSVLoader
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 from langchain.chains import RetrievalQA
+import os 
 
 api_key = "AIzaSyCQZD295J1jrE3Vrzyx6llLflohKk8zEvo"
 
@@ -14,14 +15,17 @@ Instruct_embeddings = HuggingFaceInstructEmbeddings()
 
 file_path = "faiss_index"
 
-
 def create_vector_db():
-    loader = CSVLoader(file_path="codebasics_faqs.csv", source_column="prompt", encoding="ISO-8859-1")
+    # Check if the file already exists
+    if not os.path.exists(file_path):
+        loader = CSVLoader(file_path="codebasics_faqs.csv", source_column="prompt", encoding="ISO-8859-1")
 
-    # Load the data into a list
-    data = loader.load()
-    vector_db = FAISS.from_documents(documents=data, embedding=Instruct_embeddings)
-    vector_db.save_local(file_path)
+        # Load the data into a list
+        data = loader.load()
+        vector_db = FAISS.from_documents(documents=data, embedding=Instruct_embeddings)
+        vector_db.save_local(file_path)
+    else:
+        print(f"Using existing FAISS index at {file_path}")
 
 
 def get_qa_chain():

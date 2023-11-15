@@ -8,10 +8,10 @@ btn=st.button("Create KnowledgeBase 🐱‍👤")
 if btn :
     pass 
 question = st.text_input("Question:")
+with st.spinner("Please Wait 🐱‍🏍..."):
+    if question:
+            chain = get_qa_chain()
+            response = chain(question)
 
-if question:
-        chain = get_qa_chain()
-        response = chain(question)
-
-        st.header("Answer:")
-        st.write(response["result"])
+            st.header("Answer:")
+            st.write(response["result"])
